@@ -1,0 +1,34 @@
+{
+	"database": {
+		"process" : true,
+		"initialize": true,
+		"files": [
+			"/Users/marcobonati/Develop/sources/Personal/sbd_lista_scuole/SCUANAGRAFEPAR20170221.csv",
+			"/Users/marcobonati/Develop/sources/Personal/sbd_lista_scuole/SCUANAGRAFESTAT20170221.csv"
+		]
+	},
+	
+	"input" : {
+		"files" : [
+			"/Users/marcobonati/Develop/sources/Personal/sbd_lista_scuole/Nazionale_AIE_Finale.txt"
+		],
+		"rowKeyField" : "COD_SCU",
+		"format": "tdf",
+		"trim" : true
+	},
+		
+	"output" : {
+		"folder" : "./output/",
+		"subfolder" : true
+	},
+	
+	"log" : {
+		"level" : "info"
+	},
+	
+	"uploader" : {
+		"type" : "DropBox",
+		"accessToken" : "mXP6cC_TOsoAAAAAAAAAvNS20k9IyfGOMQVanjFD5wEwnqkzRj_eAvKB514GpLCM"
+	}
+	
+}
