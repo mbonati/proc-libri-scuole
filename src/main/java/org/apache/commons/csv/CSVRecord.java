@@ -291,7 +291,7 @@ public final class CSVRecord implements Serializable, Iterable<String> {
     	//private final Map<String, Integer> mapping;
     	Set<Entry<String, Integer>> entries = this.mapping.entrySet();
     	for (Entry<String, Integer> entry:entries){
-    		names.add(entry.getValue(), entry.getKey());
+    		names.add(entry.getValue(), entry.getKey() );
     	}
     	return names.toArray(new String[]{});
     }

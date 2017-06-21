@@ -60,14 +60,6 @@ public class ScuolaDef {
 
 	public List<String> names() {
 		return this.names;
-//		String[] ret = new String[datiScuola.size()];
-//		int i = 0;
-//		Set<Entry<String,String>> entries = datiScuola.entrySet();
-//		for (Entry<String,String> entry:entries){
-//			ret[i] = entry.getKey();
-//			i++;
-//		}
-//		return ret;
 	}
 	
 	

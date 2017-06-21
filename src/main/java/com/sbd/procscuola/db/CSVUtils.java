@@ -24,12 +24,12 @@ public class CSVUtils {
 	private static String followCVSformat(String value) {
 
 		String result = value;
-		// if (result.contains("\"")) {
-		// result = result.replace("\"", "\"\"");
-		// }
-		if (result.contains(",")) {
-			result = "\"" + result + "\"";
-		}
+		 if (result.contains("\"")) {
+		 result = result.replace("\"", "\"\"");
+		 }
+//		if (result.contains(",")) {
+//			result = "\"" + result + "\"";
+//		}
 		return result;
 
 	}
@@ -61,6 +61,11 @@ public class CSVUtils {
 		w.append(sb.toString());
 
 	}
+	
+	private String quoteString(String valueStr) {
+		return "\"" + valueStr +"\"" ;
+	}
+
 
 	public static CSVFormat getCSVFormatFor(String format) {
 		if (format.equalsIgnoreCase("RFC4180")) {

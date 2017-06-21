@@ -193,7 +193,7 @@ public class ListaTestiProcessor {
 	}
 
 	private void writeHeader(FileInfo f) throws IOException {
-		CSVUtils.writeLine(f.writer, this.header);
+		CSVUtils.writeLine(f.writer, this.header,';','"');
 	}
 
 	private void createHeader(ScuolaDef scuolaDesc, CSVRecord record) {
@@ -218,7 +218,7 @@ public class ListaTestiProcessor {
 		// StandardOpenOption.CREATE, StandardOpenOption.APPEND);
 		// FileUtils.writeStringToFile(f, buildOutputRecord(scuolaDesc, record),
 		// true);
-		CSVUtils.writeLine(f.writer, buildOutputRecord(scuolaDesc, record));
+		CSVUtils.writeLine(f.writer, buildOutputRecord(scuolaDesc, record),';','"');
 	}
 
 	private List<String> buildOutputRecord(ScuolaDef scuolaDesc, CSVRecord record) {
