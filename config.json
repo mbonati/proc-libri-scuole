@@ -12,7 +12,7 @@
 		"files" : [
 			"/Users/marcobonati/Develop/sources/Personal/sbd_lista_scuole/Nazionale_AIE_Finale.txt"
 		],
-		"rowKeyField" : "CODSCU",
+		"rowKeyField" : "COSCUO",
 		"format": "RFC4180",
 		"delimiter" : ";",
 		"quote" : "\"",
@@ -21,7 +21,9 @@
 		
 	"output" : {
 		"folder" : "./output/",
-		"subfolder" : true
+		"subfolder" : true,
+		"separator" : ",",
+		"quote" : '\"'
 	},
 	
 	"log" : {

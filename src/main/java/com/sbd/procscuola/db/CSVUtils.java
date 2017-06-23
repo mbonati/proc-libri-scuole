@@ -5,10 +5,16 @@ import java.io.Writer;
 import java.util.List;
 
 import org.apache.commons.csv.CSVFormat;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.sbd.procscuola.ListaTestiProcessor;
 
 import net.sf.json.JSONObject;
 
 public class CSVUtils {
+
+	private static final Logger LOG = LoggerFactory.getLogger(CSVUtils.class);
 
 	private static final char DEFAULT_SEPARATOR = ',';
 
@@ -93,21 +99,25 @@ public class CSVUtils {
 		// "quote" : "\"",
 		// "trim" : true
 
+		//return CSVFormat.RFC4180.withDelimiter(';').withQuote('"').withFirstRecordAsHeader().withTrim();
+
+		LOG.info("CSV reader format is {}", inputConfig);
+
 		CSVFormat reader = CSVFormat.RFC4180;
 		if (inputConfig.containsKey("format")) {
 			reader = CSVUtils.getCSVFormatFor(inputConfig.getString("format"));
 		}
 
 		if (inputConfig.containsKey("delimiter")) {
-			reader.withDelimiter(inputConfig.getString("delimiter").charAt(0));
+			reader = reader.withDelimiter(inputConfig.getString("delimiter").charAt(0));
 		}
 
 		if (inputConfig.containsKey("quote")) {
-			reader.withQuote(inputConfig.getString("quote").charAt(0));
+			reader = reader.withQuote(inputConfig.getString("quote").charAt(0));
 		}
 
 		if (inputConfig.containsKey("trim")) {
-			reader.withTrim(inputConfig.getBoolean("trim"));
+			reader = reader.withTrim(inputConfig.getBoolean("trim"));
 		}
 		
 		return reader.withFirstRecordAsHeader();

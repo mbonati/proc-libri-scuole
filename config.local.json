@@ -1,34 +1,38 @@
 {
-	"database": {
-		"process" : true,
-		"initialize": true,
-		"files": [
-			"/Users/marcobonati/Develop/sources/Personal/sbd_lista_scuole/SCUANAGRAFEPAR20170221.csv",
-			"/Users/marcobonati/Develop/sources/Personal/sbd_lista_scuole/SCUANAGRAFESTAT20170221.csv"
+	'database': {
+		'process' : false,
+		'initialize': true,
+		'files': [
+			'/Users/marcobonati/Develop/sources/Personal/sbd_lista_scuole/SCUANAGRAFEPAR20170221.csv',
+			'/Users/marcobonati/Develop/sources/Personal/sbd_lista_scuole/SCUANAGRAFESTAT20170221.csv'
 		]
 	},
 	
-	"input" : {
-		"files" : [
-			"/Users/marcobonati/Develop/sources/Personal/sbd_lista_scuole/Nazionale_AIE_Finale.txt"
+	'input' : {
+		'files' : [
+			'/Users/marcobonati/Develop/sources/Personal/sbd_lista_scuole/Adozioni_MIUR_20170612.txt.001'
 		],
-		"rowKeyField" : "COD_SCU",
-		"format": "tdf",
+		"rowKeyField" : "COSCUO",
+		"format": "RFC4180",
+		"delimiter" : ";",
+		"quote" : "\"",
 		"trim" : true
 	},
 		
-	"output" : {
-		"folder" : "./output/",
-		"subfolder" : true
+	'output' : {
+		'folder' : './output/',
+		'subfolder' : true,
+		'separator' : ',',
+		'quotes' : '\"'
 	},
 	
-	"log" : {
-		"level" : "info"
+	'log' : {
+		'level' : 'info'
 	},
 	
-	"uploader" : {
-		"type" : "DropBox",
-		"accessToken" : "mXP6cC_TOsoAAAAAAAAAvNS20k9IyfGOMQVanjFD5wEwnqkzRj_eAvKB514GpLCM"
+	'uploader' : {
+		'type' : 'DropBox',
+		'accessToken' : 'mXP6cC_TOsoAAAAAAAAAvNS20k9IyfGOMQVanjFD5wEwnqkzRj_eAvKB514GpLCM'
 	}
 	
 }

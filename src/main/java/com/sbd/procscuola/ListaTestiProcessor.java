@@ -39,13 +39,31 @@ public class ListaTestiProcessor {
 	Map<String, FileInfo> outputFiles = null;
 	String outPath = "./out/";
 	boolean useSubfolder = true;
-
 	FileInfo latestFileInfo = null;
-
 	JSONObject configuration;
-
+	
+	char separatorChar = ',';
+	char quotesChar = '"';
+	
 	public ListaTestiProcessor(JSONObject configuration) {
 		this.configuration = configuration;
+		
+		JSONObject outConfig = configuration.getJSONObject("output");
+		if (outConfig!=null){
+			if (outConfig.containsKey("quote")){
+				String quotesCharStr = outConfig.getString("quote");
+				if (quotesCharStr.length()>0){
+					this.quotesChar = quotesCharStr.charAt(0);
+				}
+			}
+			if (outConfig.containsKey("separator")){
+				String separatorStr = outConfig.getString("separator");
+				this.separatorChar = separatorStr.charAt(0);
+			}
+			
+		}
+		
+		LOG.info("The output format is quotes={} separator={}", quotesChar, separatorChar);
 	}
 
 	public void addListener(ListaTestiProcessorProgressListener listener) {
@@ -131,7 +149,6 @@ public class ListaTestiProcessor {
 		} else {
 			return CSVFormat.RFC4180.withDelimiter(';').withQuote('"').withFirstRecordAsHeader().withTrim();
 		}
-
 	}
 
 	private String getRowKeyField() {
@@ -192,10 +209,6 @@ public class ListaTestiProcessor {
 		}
 	}
 
-	private void writeHeader(FileInfo f) throws IOException {
-		CSVUtils.writeLine(f.writer, this.header,';','"');
-	}
-
 	private void createHeader(ScuolaDef scuolaDesc, CSVRecord record) {
 		this.header = new ArrayList<String>();
 		this.header.addAll(Arrays.asList(record.names()));
@@ -218,7 +231,18 @@ public class ListaTestiProcessor {
 		// StandardOpenOption.CREATE, StandardOpenOption.APPEND);
 		// FileUtils.writeStringToFile(f, buildOutputRecord(scuolaDesc, record),
 		// true);
-		CSVUtils.writeLine(f.writer, buildOutputRecord(scuolaDesc, record),';','"');
+		//CSVUtils.writeLine(f.writer, buildOutputRecord(scuolaDesc, record),';','"');
+		this.writeLine(f.writer, buildOutputRecord(scuolaDesc, record));
+	}
+	
+	private void writeHeader(FileInfo f) throws IOException {
+		//CSVUtils.writeLine(f.writer, this.header,separator,quotes);
+		this.writeLine(f.writer, this.header);
+	}
+	
+	
+	private void writeLine(FileWriter writer, List<String> values) throws IOException {
+		CSVUtils.writeLine(writer, values,separatorChar,quotesChar);
 	}
 
 	private List<String> buildOutputRecord(ScuolaDef scuolaDesc, CSVRecord record) {
