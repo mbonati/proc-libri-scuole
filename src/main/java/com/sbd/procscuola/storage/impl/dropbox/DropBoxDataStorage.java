@@ -23,14 +23,26 @@ public class DropBoxDataStorage implements DataStorageClient {
 	private static final Logger LOG = LoggerFactory.getLogger(DropBoxDataStorage.class);
 
 	DbxClient dbxClient;
-
+	JSONObject configuration;
+	
 	public DropBoxDataStorage() {
 	}
 
 	public void setup(JSONObject configuration) throws Exception {
 		LOG.info("Initilazing {}...", this.getClass().getSimpleName());
 
-		String accessToken = "mXP6cC_TOsoAAAAAAAAAvNS20k9IyfGOMQVanjFD5wEwnqkzRj_eAvKB514GpLCM";
+		String accessToken = null;//"mXP6cC_TOsoAAAAAAAAAvNS20k9IyfGOMQVanjFD5wEwnqkzRj_eAvKB514GpLCM";
+
+		this.configuration = configuration;
+		JSONObject uploaderConfig = null;
+		if (this.configuration != null) {
+			uploaderConfig = configuration.getJSONObject("uploader");
+			accessToken = uploaderConfig.getString("accessToken");
+		} else {
+			LOG.info("Configuration not found for {} uploader.", this.getClass().getSimpleName());
+			return;
+		}
+
 		DbxRequestConfig config = new DbxRequestConfig("ProcLibriScuole.DropBoxDataStorage/1.0",
 				Locale.getDefault().toString());
 
@@ -42,7 +54,7 @@ public class DropBoxDataStorage implements DataStorageClient {
 	@Override
 	public void uploadFile(File file, File basePath) throws Exception {
 		long startUploadTime = System.currentTimeMillis();
-		LOG.debug("uploading file {}...", file.getName());
+		LOG.info("uploading file {}...", file.getName());
 
         FileInputStream inputStream = new FileInputStream(file);
         try {
@@ -58,12 +70,12 @@ public class DropBoxDataStorage implements DataStorageClient {
         }
 
 		long endUploadTime = System.currentTimeMillis();
-		LOG.debug("file {} uploaded. Total {}s", file.getName(), (endUploadTime - startUploadTime) / 1000);
+		LOG.info("file {} uploaded. Total {}s", file.getName(), (endUploadTime - startUploadTime) / 1000);
 	}
 
 	@Override
 	public void uploadFolder(File folder) throws Exception {
-		LOG.debug("Starting upload folder {}...", folder.getName());
+		LOG.info("Starting upload folder {}...", folder.getName());
 		long startUploadTime = System.currentTimeMillis();
 
 		final String[] SUFFIX = { "**" }; // use the suffix to filter
@@ -77,7 +89,7 @@ public class DropBoxDataStorage implements DataStorageClient {
 		}
 
 		long endUploadTime = System.currentTimeMillis();
-		LOG.debug("Folder {} uploaded. Total {}s", folder.getName(), (endUploadTime - startUploadTime) / 1000);
+		LOG.info("Folder {} uploaded. Total {}s", folder.getName(), (endUploadTime - startUploadTime) / 1000);
 	}
 
 }

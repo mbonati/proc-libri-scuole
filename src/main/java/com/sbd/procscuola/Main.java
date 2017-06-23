@@ -6,6 +6,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.sbd.procscuola.db.MapperScuole;
+import com.sbd.procscuola.storage.DataStorageClient;
+import com.sbd.procscuola.storage.impl.dropbox.DropBoxDataStorage;
 
 import ch.qos.logback.classic.Level;
 import net.sf.json.JSONArray;
@@ -32,6 +34,7 @@ public class Main {
 			setupLogger(configuration);
 			processDatabase(configuration);
 			processInputFiles(configuration);
+			uploadOutputFiles(configuration);
 
 		} catch (Throwable th) {
 			LOG.error("Procedure fatal error:{}", th.getMessage(), th);
@@ -143,4 +146,52 @@ public class Main {
 
 	}
 
+	private static void uploadOutputFiles(JSONObject configuration) throws Exception {
+		JSONObject uploaderConfig = configuration.getJSONObject("uploader");
+		if (uploaderConfig==null){
+			LOG.info("No uploader defined into configuration. Skipping this task.");
+			return;
+		}
+		
+		String uploaderType = null;
+		if (uploaderConfig.containsKey("type")){
+			uploaderType = uploaderConfig.getString("type");
+		}
+
+		if (uploaderType!=null){
+			LOG.info("Uploader {} found in configuration.", uploaderType);
+			uploadOutputFiles(configuration, uploaderType);
+		} else {
+			LOG.info("Uploader type not defined in configuration. Skipping this task");
+		}
+		
+	}
+	
+	private static void uploadOutputFiles(JSONObject configuration, String uploaderType) throws Exception {
+		LOG.debug("uploadOutputFiles called for {}.", uploaderType);
+
+		DataStorageClient dsc = createStorageForType(uploaderType);
+		LOG.debug("DataStorageClient for {} is {}", uploaderType, dsc);
+		dsc.setup(configuration);
+
+		JSONObject outConfig = configuration.getJSONObject("output");
+		boolean useSubfolder = outConfig.getBoolean("subfolder");
+		String outFolder = outConfig.getString("folder");
+
+		LOG.info("Starting uploading data...");
+
+		dsc.uploadFolder(new File(outFolder));
+
+		LOG.debug("uploadOutputFiles done {}.", uploaderType);
+	}
+
+	private static DataStorageClient createStorageForType(String uploaderType) {
+		if (uploaderType.equalsIgnoreCase("dropbox")){
+			return new DropBoxDataStorage();
+		} else {
+			return null;
+		}
+	}
+	
+	
 }
