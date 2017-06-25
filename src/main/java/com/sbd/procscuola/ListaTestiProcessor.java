@@ -44,6 +44,7 @@ public class ListaTestiProcessor {
 	
 	char separatorChar = ',';
 	char quotesChar = '"';
+	String outFileExt = "csv";
 	
 	public ListaTestiProcessor(JSONObject configuration) {
 		this.configuration = configuration;
@@ -60,7 +61,9 @@ public class ListaTestiProcessor {
 				String separatorStr = outConfig.getString("separator");
 				this.separatorChar = separatorStr.charAt(0);
 			}
-			
+			if (outConfig.containsKey("fileExt")){
+				this.outFileExt = outConfig.getString("fileExt");
+			}
 		}
 		
 		LOG.info("The output format is quotes={} separator={}", quotesChar, separatorChar);
@@ -182,7 +185,7 @@ public class ListaTestiProcessor {
 		} else {
 			LOG.debug("Creating file for {}", id);
 			SimpleDateFormat sdf = new SimpleDateFormat("YYYYMMDD");
-			String fileName = id + "_" + sdf.format(new Date()) + ".csv";
+			String fileName = id + "_" + sdf.format(new Date()) + "." + getOutFileExtention();
 			String path = null;
 			if (this.useSubfolder) {
 				path = outPath + "/" + id;
@@ -200,6 +203,10 @@ public class ListaTestiProcessor {
 			this.latestFileInfo = fInfo;
 			return this.latestFileInfo;
 		}
+	}
+
+	private String getOutFileExtention() {
+		return this.outFileExt;
 	}
 
 	private void ensureFolderExists(String path) throws IOException {

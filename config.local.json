@@ -21,6 +21,7 @@
 		
 	'output' : {
 		'folder' : './output/',
+		'fileExt' : 'txt',
 		'subfolder' : true,
 		'separator' : ',',
 		'quotes' : '\"'
