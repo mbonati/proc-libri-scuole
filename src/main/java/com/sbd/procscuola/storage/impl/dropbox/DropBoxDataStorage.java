@@ -75,11 +75,11 @@ public class DropBoxDataStorage implements DataStorageClient {
 		LOG.info("file {} uploaded. Total {}s", file.getName(), (endUploadTime - startUploadTime) / 1000);
 	}
 
-	private static String toUnixPath(String filePath){
+	public static String toUnixPath(String filePath){
 		String baseName = FilenameUtils.getBaseName(filePath);
 		String path = FilenameUtils.getPath(filePath);
 		String ext = FilenameUtils.getExtension(filePath);
-		return FilenameUtils.normalize(path) +  baseName +"." + ext;
+		return FilenameUtils.separatorsToUnix(FilenameUtils.normalize(path) +  baseName +"." + ext);
 	}
 
 	
