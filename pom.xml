@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.sbd</groupId>
 	<artifactId>proc-libri-scuole</artifactId>
-	<version>0.0.5</version>
+	<version>0.0.7</version>
 	<name>proc-libri-scuole</name>
 
 	<dependencies>

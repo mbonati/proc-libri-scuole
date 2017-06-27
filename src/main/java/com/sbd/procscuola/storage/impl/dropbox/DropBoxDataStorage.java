@@ -6,6 +6,7 @@ import java.util.Collection;
 import java.util.Locale;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.filefilter.TrueFileFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -61,8 +62,9 @@ public class DropBoxDataStorage implements DataStorageClient {
         	String baseFolderPath = basePath.getAbsolutePath();
         	String fileFolderPath = file.getAbsolutePath();
         	String fileBasePath = fileFolderPath.substring(baseFolderPath.length());
-        	String fileName = fileBasePath;
-        	LOG.debug("Filename is {}", fileName);
+        	String fileNameOriginal = fileBasePath;
+        	String fileName = toUnixPath(fileBasePath);
+        	LOG.info("Filename is {} (original={})", fileName, fileNameOriginal);
             DbxEntry.File uploadedFile = dbxClient.uploadFile(fileName,
                 DbxWriteMode.add(), file.length(), inputStream);
         } finally {
@@ -73,6 +75,14 @@ public class DropBoxDataStorage implements DataStorageClient {
 		LOG.info("file {} uploaded. Total {}s", file.getName(), (endUploadTime - startUploadTime) / 1000);
 	}
 
+	private static String toUnixPath(String filePath){
+		String baseName = FilenameUtils.getBaseName(filePath);
+		String path = FilenameUtils.getPath(filePath);
+		String ext = FilenameUtils.getExtension(filePath);
+		return FilenameUtils.normalize(path) +  baseName +"." + ext;
+	}
+
+	
 	@Override
 	public void uploadFolder(File folder) throws Exception {
 		LOG.info("Starting upload folder {}...", folder.getName());
