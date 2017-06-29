@@ -63,7 +63,7 @@ public class DropBoxDataStorage implements DataStorageClient {
         	String fileFolderPath = file.getAbsolutePath();
         	String fileBasePath = fileFolderPath.substring(baseFolderPath.length());
         	String fileNameOriginal = fileBasePath;
-        	String fileName = toUnixPath("/" + fileBasePath);
+        	String fileName = "/" + toUnixPath(fileBasePath);
         	LOG.info("Filename is {} (original={})", fileName, fileNameOriginal);
             DbxEntry.File uploadedFile = dbxClient.uploadFile(fileName,
                 DbxWriteMode.add(), file.length(), inputStream);
