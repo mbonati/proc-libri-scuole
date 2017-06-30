@@ -33,7 +33,9 @@
 	
 	'uploader' : {
 		'type' : 'DropBox',
-		'accessToken' : 'mXP6cC_TOsoAAAAAAAAAvNS20k9IyfGOMQVanjFD5wEwnqkzRj_eAvKB514GpLCM'
+		'accessToken' : 'mXP6cC_TOsoAAAAAAAAAvNS20k9IyfGOMQVanjFD5wEwnqkzRj_eAvKB514GpLCM',
+		'retries' : 3,
+		'compress' : true
 	}
 	
 }
