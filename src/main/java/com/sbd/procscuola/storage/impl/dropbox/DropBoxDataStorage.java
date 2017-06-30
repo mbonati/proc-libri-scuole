@@ -62,17 +62,17 @@ public class DropBoxDataStorage implements DataStorageClient {
 		LOG.info("{} intialized successfully.", this.getClass().getSimpleName());
 	}
 
+	
 	@Override
 	public boolean uploadFile(File file, File basePath) throws Exception {
 		long startUploadTime = System.currentTimeMillis();
-		LOG.info("uploading file {}...", file.getName());
 		
 		DbxClient client = null;
-		
-        FileInputStream inputStream = new FileInputStream(file);
+		FileInputStream inputStream = null;
         try {
         	
         	if (this.compress){
+            	LOG.debug("Compression is enabled, compressing file {}...", file.getName());
 	        	//first compress the file
 	        	String sourcePath = FilenameUtils.getFullPath(file.getAbsolutePath());
 	        	String zippedFileName = FilenameUtils.getBaseName(file.getName()) + ".zip";
@@ -82,6 +82,10 @@ public class DropBoxDataStorage implements DataStorageClient {
 	        	// then upload the zipped file, swap the variables
 	        	file = zippedFile;
         	}
+
+        	LOG.info("uploading file {}...", file.getName());
+
+            inputStream = new FileInputStream(file);
         	
         	client = getClient();
         	String baseFolderPath = basePath.getAbsolutePath();
@@ -92,17 +96,20 @@ public class DropBoxDataStorage implements DataStorageClient {
         	LOG.info("Filename is {} (original={})", fileName, fileNameOriginal);
             DbxEntry.File uploadedFile = client.uploadFile(fileName,
                 DbxWriteMode.add(), file.length(), inputStream);
+            
+    		long endUploadTime = System.currentTimeMillis();
+    		LOG.info("file {} uploaded. Total {}s", file.getName(), (endUploadTime - startUploadTime) / 1000);
+        	return true;
         } catch (Exception ex){
         	LOG.error("Error uploading file "+file.getName()+": {}", ex.getMessage(), ex);
         	return false;
         } finally {
-            inputStream.close();
+        	try {
+        		inputStream.close();
+        	} catch (Exception ex){}
             client = null;
         }
 
-		long endUploadTime = System.currentTimeMillis();
-		LOG.info("file {} uploaded. Total {}s", file.getName(), (endUploadTime - startUploadTime) / 1000);
-    	return true;
 	}
 	
 	private DbxClient getClient(){
@@ -133,9 +140,13 @@ public class DropBoxDataStorage implements DataStorageClient {
 			} else {
 				int attempts = 0;
 				boolean uploadOk = false;
-				while(!uploadOk || (attempts < retries)){
+				while(!uploadOk){
 					uploadOk = uploadFile(file, folder);
 					attempts++;
+					if (attempts == retries){
+						LOG.info("Too many attempts to upload the file {}...skipping this file", file.getName());
+						break;
+					}
 				}
 			}
 		}
